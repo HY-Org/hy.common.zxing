@@ -64,14 +64,6 @@ final class DetectionResultRowIndicatorColumn extends DetectionResultColumn {
       }
       Codeword codeword = codewords[codewordsRow];
 
-      //      float expectedRowNumber = (codewordsRow - firstRow) / averageRowHeight;
-      //      if (Math.abs(codeword.getRowNumber() - expectedRowNumber) > 2) {
-      //        SimpleLog.log(LEVEL.WARNING,
-      //            "Removing codeword, rowNumberSkew too high, codeword[" + codewordsRow + "]: Expected Row: " +
-      //                expectedRowNumber + ", RealRow: " + codeword.getRowNumber() + ", value: " + codeword.getValue());
-      //        codewords[codewordsRow] = null;
-      //      }
-
       int rowDifference = codeword.getRowNumber() - barcodeRow;
 
       // TODO improve handling with case where first row indicator doesn't start with 0
@@ -207,8 +199,10 @@ final class DetectionResultRowIndicatorColumn extends DetectionResultColumn {
         (barcodeRowCountLowerPart.getValue().length == 0) ||
         (barcodeECLevel.getValue().length == 0) ||
         barcodeColumnCount.getValue()[0] < 1 ||
-        barcodeRowCountUpperPart.getValue()[0] + barcodeRowCountLowerPart.getValue()[0] < PDF417Common.MIN_ROWS_IN_BARCODE ||
-        barcodeRowCountUpperPart.getValue()[0] + barcodeRowCountLowerPart.getValue()[0] > PDF417Common.MAX_ROWS_IN_BARCODE) {
+        barcodeRowCountUpperPart.getValue()[0] + barcodeRowCountLowerPart.getValue()[0] <
+            PDF417Common.MIN_ROWS_IN_BARCODE ||
+        barcodeRowCountUpperPart.getValue()[0] + barcodeRowCountLowerPart.getValue()[0] >
+            PDF417Common.MAX_ROWS_IN_BARCODE) {
       return null;
     }
     BarcodeMetadata barcodeMetadata = new BarcodeMetadata(barcodeColumnCount.getValue()[0],

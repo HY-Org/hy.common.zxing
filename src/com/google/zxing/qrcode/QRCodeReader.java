@@ -99,6 +99,7 @@ public class QRCodeReader implements Reader {
       result.putMetadata(ResultMetadataType.STRUCTURED_APPEND_PARITY,
                          decoderResult.getStructuredAppendParity());
     }
+    result.putMetadata(ResultMetadataType.SYMBOLOGY_IDENTIFIER, "]Q" + decoderResult.getSymbologyModifier());
     return result;
   }
 
@@ -112,8 +113,6 @@ public class QRCodeReader implements Reader {
    * which contains only an unrotated, unskewed, image of a code, with some white border
    * around it. This is a specialized method that works exceptionally fast in this special
    * case.
-   *
-   * @see com.google.zxing.datamatrix.DataMatrixReader#extractPureBits(BitMatrix)
    */
   private static BitMatrix extractPureBits(BitMatrix image) throws NotFoundException {
 

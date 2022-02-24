@@ -1,6 +1,7 @@
-Manifest-Version: 3.3.2
+Manifest-Version: 3.4.1
 Created-By: google  2017
-Specification-Version: 3.3.2  2021-03-29
-SourceCode1: https://github.com/zxing/zxing
-SourceCode2: https://github.com/HY-ZhengWei/hy.common.zxing
-SourceCode2: https://gitee.com/HY-ZhengWei/hy.common.zxing
+Specification-Version: 3.4.1  2022-02-24
+SourceCode: https://github.com/HY-ZhengWei/hy.common.zxing
+SourceCodeChina: https://gitee.com/HY-ZhengWei/hy.common.zxing
+SourceCodePlus: https://github.com/zxing/zxing
+Build-JDK: 1.8

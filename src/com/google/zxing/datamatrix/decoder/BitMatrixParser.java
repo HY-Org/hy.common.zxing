@@ -48,7 +48,7 @@ final class BitMatrixParser {
   }
 
   /**
-   * <p>Creates the version object based on the dimension of the original bit matrix from 
+   * <p>Creates the version object based on the dimension of the original bit matrix from
    * the datamatrix code.</p>
    *
    * <p>See ISO 16022:2006 Table 7 - ECC 200 symbol attributes</p>
@@ -126,7 +126,7 @@ final class BitMatrixParser {
         // Sweep downward diagonally to the left
         do {
           if ((row >= 0) && (column < numColumns) && !readMappingMatrix.get(column, row)) {
-             result[resultOffset++] = (byte) readUtah(row, column, numRows, numColumns);
+            result[resultOffset++] = (byte) readUtah(row, column, numRows, numColumns);
           }
           row += 2;
           column -= 2;
@@ -160,6 +160,9 @@ final class BitMatrixParser {
     if (column < 0) {
       column += numColumns;
       row += 4 - ((numColumns + 4) & 0x07);
+    }
+    if (row >= numRows) {
+      row -= numRows;
     }
     readMappingMatrix.set(column, row);
     return mappingBitMatrix.get(column, row);

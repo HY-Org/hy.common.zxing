@@ -66,7 +66,7 @@ public final class Detector {
    * @return {@link AztecDetectorResult} encapsulating results of detecting an Aztec Code
    * @throws NotFoundException if no Aztec Code can be found
    */
-   public AztecDetectorResult detect(boolean isMirror) throws NotFoundException {
+  public AztecDetectorResult detect(boolean isMirror) throws NotFoundException {
 
     // 1. Get the center of the aztec matrix
     Point pCenter = getMatrixCenter();
@@ -425,10 +425,12 @@ public final class Detector {
 
     int corr = 3;
 
-    p1 = new Point(p1.getX() - corr, p1.getY() + corr);
-    p2 = new Point(p2.getX() - corr, p2.getY() - corr);
-    p3 = new Point(p3.getX() + corr, p3.getY() - corr);
-    p4 = new Point(p4.getX() + corr, p4.getY() + corr);
+    p1 = new Point(Math.max(0, p1.getX() - corr), Math.min(image.getHeight() - 1, p1.getY() + corr));
+    p2 = new Point(Math.max(0, p2.getX() - corr), Math.max(0, p2.getY() - corr));
+    p3 = new Point(Math.min(image.getWidth() - 1, p3.getX() + corr),
+                   Math.max(0, Math.min(image.getHeight() - 1, p3.getY() - corr)));
+    p4 = new Point(Math.min(image.getWidth() - 1, p4.getX() + corr),
+                   Math.min(image.getHeight() - 1, p4.getY() + corr));
 
     int cInit = getColor(p4, p1);
 
@@ -461,6 +463,9 @@ public final class Detector {
    */
   private int getColor(Point p1, Point p2) {
     float d = distance(p1, p2);
+    if (d == 0.0f) {
+      return 0;
+    }
     float dx = (p2.getX() - p1.getX()) / d;
     float dy = (p2.getY() - p1.getY()) / d;
     int error = 0;
@@ -470,13 +475,13 @@ public final class Detector {
 
     boolean colorModel = image.get(p1.getX(), p1.getY());
 
-    int iMax = (int) Math.ceil(d);
+    int iMax = (int) Math.floor(d);
     for (int i = 0; i < iMax; i++) {
-      px += dx;
-      py += dy;
       if (image.get(MathUtils.round(px), MathUtils.round(py)) != colorModel) {
         error++;
       }
+      px += dx;
+      py += dy;
     }
 
     float errRatio = error / d;
@@ -524,8 +529,8 @@ public final class Detector {
    * @param newSide the new length of the size of the square in the target bit matrix
    * @return the corners of the expanded square
    */
-  private static ResultPoint[] expandSquare(ResultPoint[] cornerPoints, float oldSide, float newSide) {
-    float ratio = newSide / (2 * oldSide);
+  private static ResultPoint[] expandSquare(ResultPoint[] cornerPoints, int oldSide, int newSide) {
+    float ratio = newSide / (2.0f * oldSide);
     float dx = cornerPoints[0].getX() - cornerPoints[2].getX();
     float dy = cornerPoints[0].getY() - cornerPoints[2].getY();
     float centerx = (cornerPoints[0].getX() + cornerPoints[2].getX()) / 2.0f;
@@ -545,7 +550,7 @@ public final class Detector {
   }
 
   private boolean isValid(int x, int y) {
-    return x >= 0 && x < image.getWidth() && y > 0 && y < image.getHeight();
+    return x >= 0 && x < image.getWidth() && y >= 0 && y < image.getHeight();
   }
 
   private boolean isValid(ResultPoint point) {
@@ -566,10 +571,7 @@ public final class Detector {
     if (compact) {
       return 4 * nbLayers + 11;
     }
-    if (nbLayers <= 4) {
-      return 4 * nbLayers + 15;
-    }
-    return 4 * nbLayers + 2 * ((nbLayers - 4) / 8 + 1) + 15;
+    return 4 * nbLayers + 2 * ((2 * nbLayers + 6) / 15) + 15;
   }
 
   static final class Point {
@@ -577,7 +579,7 @@ public final class Detector {
     private final int y;
 
     ResultPoint toResultPoint() {
-      return new ResultPoint(getX(), getY());
+      return new ResultPoint(x, y);
     }
 
     Point(int x, int y) {

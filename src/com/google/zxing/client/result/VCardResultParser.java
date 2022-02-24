@@ -196,7 +196,11 @@ public final class VCardResultParser extends ResultParser {
         if ("uri".equals(valueType)) {
           // Don't actually support dereferencing URIs, but use scheme-specific part not URI
           // as value, to support tel: and mailto:
-          element = URI.create(element).getSchemeSpecificPart();
+          try {
+            element = URI.create(element).getSchemeSpecificPart();
+          } catch (IllegalArgumentException iae) {
+            // ignore
+          }
         }
         if (metadata == null) {
           List<String> match = new ArrayList<>(1);
@@ -292,7 +296,7 @@ public final class VCardResultParser extends ResultParser {
         result.add(value);
       }
     }
-    return result.toArray(new String[result.size()]);
+    return result.toArray(EMPTY_STR_ARRAY);
   }
   
   private static String[] toTypes(Collection<List<String>> lists) {
@@ -320,7 +324,7 @@ public final class VCardResultParser extends ResultParser {
         result.add(type);
       }
     }
-    return result.toArray(new String[result.size()]);
+    return result.toArray(EMPTY_STR_ARRAY);
   }
 
   private static boolean isLikeVCardDate(CharSequence value) {

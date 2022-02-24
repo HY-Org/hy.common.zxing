@@ -55,12 +55,13 @@ public final class PDF417ScanningDecoder {
                                      ResultPoint imageTopRight,
                                      ResultPoint imageBottomRight,
                                      int minCodewordWidth,
-                                     int maxCodewordWidth) throws NotFoundException, FormatException, ChecksumException {
+                                     int maxCodewordWidth)
+      throws NotFoundException, FormatException, ChecksumException {
     BoundingBox boundingBox = new BoundingBox(image, imageTopLeft, imageBottomLeft, imageTopRight, imageBottomRight);
     DetectionResultRowIndicatorColumn leftRowIndicatorColumn = null;
     DetectionResultRowIndicatorColumn rightRowIndicatorColumn = null;
-    DetectionResult detectionResult = null;
-    for (int i = 0; i < 2; i++) {
+    DetectionResult detectionResult;
+    for (boolean firstPass = true; ; firstPass = false) {
       if (imageTopLeft != null) {
         leftRowIndicatorColumn = getRowIndicatorColumn(image, boundingBox, imageTopLeft, true, minCodewordWidth,
             maxCodewordWidth);
@@ -73,15 +74,15 @@ public final class PDF417ScanningDecoder {
       if (detectionResult == null) {
         throw NotFoundException.getNotFoundInstance();
       }
-      if (i == 0 && detectionResult.getBoundingBox() != null &&
-          (detectionResult.getBoundingBox().getMinY() < boundingBox.getMinY() || detectionResult.getBoundingBox()
-              .getMaxY() > boundingBox.getMaxY())) {
-        boundingBox = detectionResult.getBoundingBox();
+      BoundingBox resultBox = detectionResult.getBoundingBox();
+      if (firstPass && resultBox != null &&
+          (resultBox.getMinY() < boundingBox.getMinY() || resultBox.getMaxY() > boundingBox.getMaxY())) {
+        boundingBox = resultBox;
       } else {
-        detectionResult.setBoundingBox(boundingBox);
         break;
       }
     }
+    detectionResult.setBoundingBox(boundingBox);
     int maxBarcodeColumn = detectionResult.getBarcodeColumnCount() + 1;
     detectionResult.setDetectionResultColumn(0, leftRowIndicatorColumn);
     detectionResult.setDetectionResultColumn(maxBarcodeColumn, rightRowIndicatorColumn);
@@ -244,8 +245,10 @@ public final class PDF417ScanningDecoder {
       }
       barcodeMatrix01.setValue(calculatedNumberOfCodewords);
     } else if (numberOfCodewords[0] != calculatedNumberOfCodewords) {
-      // The calculated one is more reliable as it is derived from the row indicator columns
-      barcodeMatrix01.setValue(calculatedNumberOfCodewords);
+      if (calculatedNumberOfCodewords >= 1 && calculatedNumberOfCodewords <= PDF417Common.MAX_CODEWORDS_IN_BARCODE) {
+        // The calculated one is more reliable as it is derived from the row indicator columns
+        barcodeMatrix01.setValue(calculatedNumberOfCodewords);
+      }
     }
   }
 
@@ -256,7 +259,7 @@ public final class PDF417ScanningDecoder {
     Collection<Integer> erasures = new ArrayList<>();
     int[] codewords = new int[detectionResult.getBarcodeRowCount() * detectionResult.getBarcodeColumnCount()];
     List<int[]> ambiguousIndexValuesList = new ArrayList<>();
-    List<Integer> ambiguousIndexesList = new ArrayList<>();
+    Collection<Integer> ambiguousIndexesList = new ArrayList<>();
     for (int row = 0; row < detectionResult.getBarcodeRowCount(); row++) {
       for (int column = 0; column < detectionResult.getBarcodeColumnCount(); column++) {
         int[] values = barcodeMatrix[row][column + 1].getValue();

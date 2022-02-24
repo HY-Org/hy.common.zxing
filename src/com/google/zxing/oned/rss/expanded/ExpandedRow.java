@@ -26,13 +26,10 @@ final class ExpandedRow {
 
   private final List<ExpandedPair> pairs;
   private final int rowNumber;
-  /** Did this row of the image have to be reversed (mirrored) to recognize the pairs? */
-  private final boolean wasReversed;
 
-  ExpandedRow(List<ExpandedPair> pairs, int rowNumber, boolean wasReversed) {
+  ExpandedRow(List<ExpandedPair> pairs, int rowNumber) {
     this.pairs = new ArrayList<>(pairs);
     this.rowNumber = rowNumber;
-    this.wasReversed = wasReversed;
   }
 
   List<ExpandedPair> getPairs() {
@@ -41,10 +38,6 @@ final class ExpandedRow {
 
   int getRowNumber() {
     return this.rowNumber;
-  }
-
-  boolean isReversed() {
-    return this.wasReversed;
   }
 
   boolean isEquivalent(List<ExpandedPair> otherPairs) {
@@ -65,12 +58,12 @@ final class ExpandedRow {
       return false;
     }
     ExpandedRow that = (ExpandedRow) o;
-    return this.pairs.equals(that.getPairs()) && wasReversed == that.wasReversed;
+    return this.pairs.equals(that.pairs);
   }
 
   @Override
   public int hashCode() {
-    return pairs.hashCode() ^ Boolean.valueOf(wasReversed).hashCode();
+    return pairs.hashCode();
   }
 
 }

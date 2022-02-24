@@ -36,7 +36,8 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
  * @author      ZhengWei(HY)
  * @createDate  2017-09-29
  * @version     v1.0
- *              v2.0  添加：对encodeTo...(...)的系列方法添加i_CharEncoding参数，使外部可自行设定字符集编码。
+ *              v2.0              添加：对encodeTo...(...)的系列方法添加i_CharEncoding参数，使外部可自行设定字符集编码。
+ *              v3.0  2022-02-24  升级：将ZXing包版本更新到3.4.1版本
  */
 public final class ZXingHelp
 {
@@ -85,7 +86,7 @@ public final class ZXingHelp
         // Q = ~25%
         // M = ~15%
         // L = ~7%
-        v_Hints.put(EncodeHintType.ERROR_CORRECTION ,i_ErrorCorrectionLevel); 
+        v_Hints.put(EncodeHintType.ERROR_CORRECTION ,i_ErrorCorrectionLevel);
         
         return v_Hints;
     }

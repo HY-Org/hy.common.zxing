@@ -20,6 +20,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.NotFoundException;
 import com.google.zxing.Result;
+import com.google.zxing.ResultMetadataType;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.common.BitArray;
 
@@ -152,13 +153,16 @@ public final class CodaBarReader extends OneDReader {
       runningCount += counters[i];
     }
     float right = runningCount;
-    return new Result(
+
+    Result result = new Result(
         decodeRowResult.toString(),
         null,
         new ResultPoint[]{
             new ResultPoint(left, rowNumber),
             new ResultPoint(right, rowNumber)},
         BarcodeFormat.CODABAR);
+    result.putMetadata(ResultMetadataType.SYMBOLOGY_IDENTIFIER, "]F0");
+    return result;
   }
 
   private void validatePattern(int start) throws NotFoundException {
@@ -170,7 +174,7 @@ public final class CodaBarReader extends OneDReader {
     // We break out of this loop in the middle, in order to handle
     // inter-character spaces properly.
     int pos = start;
-    for (int i = 0; true; i++) {
+    for (int i = 0; i <= end; i++) {
       int pattern = CHARACTER_ENCODINGS[decodeRowResult.charAt(i)];
       for (int j = 6; j >= 0; j--) {
         // Even j = bars, while odd j = spaces. Categories 2 and 3 are for
@@ -179,9 +183,6 @@ public final class CodaBarReader extends OneDReader {
         sizes[category] += counters[pos + j];
         counts[category]++;
         pattern >>= 1;
-      }
-      if (i >= end) {
-        break;
       }
       // We ignore the inter-character space - it could be of any size.
       pos += 8;
@@ -202,7 +203,7 @@ public final class CodaBarReader extends OneDReader {
 
     // Now verify that all of the stripes are within the thresholds.
     pos = start;
-    for (int i = 0; true; i++) {
+    for (int i = 0; i <= end; i++) {
       int pattern = CHARACTER_ENCODINGS[decodeRowResult.charAt(i)];
       for (int j = 6; j >= 0; j--) {
         // Even j = bars, while odd j = spaces. Categories 2 and 3 are for
@@ -213,9 +214,6 @@ public final class CodaBarReader extends OneDReader {
           throw NotFoundException.getNotFoundInstance();
         }
         pattern >>= 1;
-      }
-      if (i >= end) {
-        break;
       }
       pos += 8;
     }

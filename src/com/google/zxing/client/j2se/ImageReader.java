@@ -21,7 +21,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URLDecoder;
+import java.util.Base64;
 
 /**
  * Encapsulates reading URIs as images.
@@ -60,9 +60,8 @@ public final class ImageReader {
     if (base64Start < 0) {
       throw new IOException("Unsupported data URI encoding");
     }
-    String base64DataEncoded = uriString.substring(base64Start + BASE64TOKEN.length());
-    String base64Data = URLDecoder.decode(base64DataEncoded, "UTF-8");
-    byte[] imageBytes = Base64Decoder.getInstance().decode(base64Data);
+    String base64Data = uriString.substring(base64Start + BASE64TOKEN.length());
+    byte[] imageBytes = Base64.getDecoder().decode(base64Data);
     return ImageIO.read(new ByteArrayInputStream(imageBytes));
   }
 

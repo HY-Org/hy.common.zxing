@@ -22,35 +22,35 @@ import com.google.zxing.WriterException;
  * @createDate  2017-09-28
  * @version     v1.0
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING) 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class JU_ZXingHelp
-{  
+{
   
-    /** 
-     * 生成图像 
-     *  
-     * @throws WriterException 
-     * @throws IOException 
-     */  
-    @Test  
+    /**
+     * 生成图像
+     * 
+     * @throws WriterException
+     * @throws IOException
+     */
+    @Test
     public void test001_Encode() throws WriterException ,IOException
     {
-        ZXingHelp.encodeToFile(BarcodeFormat.QR_CODE  ,"C:\\Users\\ZhengWei\\Desktop\\zxing2D.png" ,"http://www.baidu.com" ,300 ,300);
-        ZXingHelp.encodeToFile(BarcodeFormat.CODE_128 ,"C:\\Users\\ZhengWei\\Desktop\\zxing1D.png" ,"Abc1234567890"        ,200 ,50);
+        ZXingHelp.encodeToFile(BarcodeFormat.QR_CODE  ,"C:\\Users\\hyzhe\\Desktop\\zxing2D.png" ,"http://www.baidu.com" ,300 ,300);
+        ZXingHelp.encodeToFile(BarcodeFormat.CODE_128 ,"C:\\Users\\hyzhe\\Desktop\\zxing1D.png" ,"Abc1234567890"        ,200 ,50);
         
         System.out.println("输出成功.");
     }
     
     
   
-    /** 
-     * 解析图像 
-     */  
-    @Test  
+    /**
+     * 解析图像
+     */
+    @Test
     public void test002_Decode()
     {
-        System.out.println("识别二维码：" + ZXingHelp.decode("/Users/hy/Downloads/zxing2D.png"));
-        System.out.println("识别条形码：" + ZXingHelp.decode("/Users/hy/Downloads/zxing1D.png"));
+        System.out.println("识别二维码：" + ZXingHelp.decode("C:\\Users\\hyzhe\\Desktop\\zxing2D.png"));
+        System.out.println("识别条形码：" + ZXingHelp.decode("C:\\Users\\hyzhe\\Desktop\\zxing1D.png"));
     }
     
-}  
+}

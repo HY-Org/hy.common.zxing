@@ -20,11 +20,13 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.NotFoundException;
 import com.google.zxing.Result;
+import com.google.zxing.ResultMetadataType;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.ResultPointCallback;
 import com.google.zxing.common.BitArray;
 import com.google.zxing.common.detector.MathUtils;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -130,19 +132,16 @@ public final class RSS14Reader extends AbstractRSSReader {
 
     ResultPoint[] leftPoints = leftPair.getFinderPattern().getResultPoints();
     ResultPoint[] rightPoints = rightPair.getFinderPattern().getResultPoints();
-    return new Result(
+    Result result = new Result(
         buffer.toString(),
         null,
         new ResultPoint[] { leftPoints[0], leftPoints[1], rightPoints[0], rightPoints[1], },
         BarcodeFormat.RSS_14);
+    result.putMetadata(ResultMetadataType.SYMBOLOGY_IDENTIFIER, "]e0");
+    return result;
   }
 
   private static boolean checkChecksum(Pair leftPair, Pair rightPair) {
-    //int leftFPValue = leftPair.getFinderPattern().getValue();
-    //int rightFPValue = rightPair.getFinderPattern().getValue();
-    //if ((leftFPValue == 0 && rightFPValue == 8) ||
-    //    (leftFPValue == 8 && rightFPValue == 0)) {
-    //}
     int checkValue = (leftPair.getChecksumPortion() + 16 * rightPair.getChecksumPortion()) % 79;
     int targetCheckValue =
         9 * leftPair.getFinderPattern().getValue() + rightPair.getFinderPattern().getValue();
@@ -161,10 +160,11 @@ public final class RSS14Reader extends AbstractRSSReader {
       FinderPattern pattern = parseFoundFinderPattern(row, rowNumber, right, startEnd);
 
       ResultPointCallback resultPointCallback = hints == null ? null :
-        (ResultPointCallback) hints.get(DecodeHintType.NEED_RESULT_POINT_CALLBACK);
+          (ResultPointCallback) hints.get(DecodeHintType.NEED_RESULT_POINT_CALLBACK);
 
       if (resultPointCallback != null) {
-        float center = (startEnd[0] + startEnd[1]) / 2.0f;
+        startEnd = pattern.getStartEnd();
+        float center = (startEnd[0] + startEnd[1] - 1) / 2.0f;
         if (right) {
           // row is actually reversed
           center = row.getSize() - 1 - center;
@@ -186,19 +186,12 @@ public final class RSS14Reader extends AbstractRSSReader {
       throws NotFoundException {
 
     int[] counters = getDataCharacterCounters();
-    counters[0] = 0;
-    counters[1] = 0;
-    counters[2] = 0;
-    counters[3] = 0;
-    counters[4] = 0;
-    counters[5] = 0;
-    counters[6] = 0;
-    counters[7] = 0;
+    Arrays.fill(counters, 0);
 
     if (outsideChar) {
       recordPatternInReverse(row, pattern.getStartEnd()[0], counters);
     } else {
-      recordPattern(row, pattern.getStartEnd()[1] + 1, counters);
+      recordPattern(row, pattern.getStartEnd()[1], counters);
       // reverse it
       for (int i = 0, j = counters.length - 1; i < j; i++, j--) {
         int temp = counters[i];
@@ -402,51 +395,56 @@ public final class RSS14Reader extends AbstractRSSReader {
       }
       incrementOdd = true;
       incrementEven = true;
-    } else */ if (mismatch == 1) {
-      if (oddParityBad) {
-        if (evenParityBad) {
-          throw NotFoundException.getNotFoundInstance();
-        }
-        decrementOdd = true;
-      } else {
-        if (!evenParityBad) {
-          throw NotFoundException.getNotFoundInstance();
-        }
-        decrementEven = true;
-      }
-    } else if (mismatch == -1) {
-      if (oddParityBad) {
-        if (evenParityBad) {
-          throw NotFoundException.getNotFoundInstance();
-        }
-        incrementOdd = true;
-      } else {
-        if (!evenParityBad) {
-          throw NotFoundException.getNotFoundInstance();
-        }
-        incrementEven = true;
-      }
-    } else if (mismatch == 0) {
-      if (oddParityBad) {
-        if (!evenParityBad) {
-          throw NotFoundException.getNotFoundInstance();
-        }
-        // Both bad
-        if (oddSum < evenSum) {
-          incrementOdd = true;
-          decrementEven = true;
-        } else {
+    } else */
+    switch (mismatch) {
+      case 1:
+        if (oddParityBad) {
+          if (evenParityBad) {
+            throw NotFoundException.getNotFoundInstance();
+          }
           decrementOdd = true;
+        } else {
+          if (!evenParityBad) {
+            throw NotFoundException.getNotFoundInstance();
+          }
+          decrementEven = true;
+        }
+        break;
+      case -1:
+        if (oddParityBad) {
+          if (evenParityBad) {
+            throw NotFoundException.getNotFoundInstance();
+          }
+          incrementOdd = true;
+        } else {
+          if (!evenParityBad) {
+            throw NotFoundException.getNotFoundInstance();
+          }
           incrementEven = true;
         }
-      } else {
-        if (evenParityBad) {
-          throw NotFoundException.getNotFoundInstance();
+        break;
+      case 0:
+        if (oddParityBad) {
+          if (!evenParityBad) {
+            throw NotFoundException.getNotFoundInstance();
+          }
+          // Both bad
+          if (oddSum < evenSum) {
+            incrementOdd = true;
+            decrementEven = true;
+          } else {
+            decrementOdd = true;
+            incrementEven = true;
+          }
+        } else {
+          if (evenParityBad) {
+            throw NotFoundException.getNotFoundInstance();
+          }
+          // Nothing to do!
         }
-        // Nothing to do!
-      }
-    } else {
-      throw NotFoundException.getNotFoundInstance();
+        break;
+      default:
+        throw NotFoundException.getNotFoundInstance();
     }
 
     if (incrementOdd) {
