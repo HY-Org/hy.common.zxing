@@ -35,8 +35,11 @@ public class JU_ZXingHelp
     @Test
     public void test001_Encode() throws WriterException ,IOException
     {
-        ZXingHelp.encodeToFile(BarcodeFormat.QR_CODE  ,"C:\\Users\\hyzhe\\Desktop\\zxing2D.png" ,"http://www.baidu.com" ,300 ,300);
-        ZXingHelp.encodeToFile(BarcodeFormat.CODE_128 ,"C:\\Users\\hyzhe\\Desktop\\zxing1D.png" ,"Abc1234567890"        ,200 ,50);
+        //ZXingHelp.encodeToFile(BarcodeFormat.QR_CODE  ,"C:\\Users\\hyzhe\\Desktop\\zxing2D.png"       ,"https://www.baidu.com" ,300 ,300);
+        ZXingHelp.encodeToFile(BarcodeFormat.QR_CODE  ,"C:\\Users\\hyzhe\\Desktop\\互联网标示解析.png" ,"88.162.02/C40.001.21013295" ,1024 ,1024);
+        ZXingHelp.encodeToFile(BarcodeFormat.QR_CODE  ,"C:\\Users\\hyzhe\\Desktop\\计算书.png" ,"https://www.wzyb.com.cn/xx/specification/previewLectotypeRes.z?modelID=8a81b2a9602ab2c9016067597dfb0203&&productModelID=AF26C147E4F543758CB439300D44613F&&exportType=3#" ,2048 ,2048);
+        ZXingHelp.encodeToFile(BarcodeFormat.QR_CODE  ,"C:\\Users\\hyzhe\\Desktop\\数据表.png" ,"https://www.wzyb.com.cn/xx/specification/previewLectotypeRes.z?modelID=8a81b2a9602ab2c9016067597dfb0203&&productModelID=AF26C147E4F543758CB439300D44613F&&exportType=1#" ,2048 ,2048);
+        // ZXingHelp.encodeToFile(BarcodeFormat.CODE_128 ,"C:\\Users\\hyzhe\\Desktop\\zxing1D.png"       ,"Abc1234567890"        ,200 ,50);
         
         System.out.println("输出成功.");
     }
