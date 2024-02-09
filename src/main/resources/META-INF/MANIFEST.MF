@@ -4,4 +4,4 @@ Specification-Version: 3.4.2  2023-01-11
 SourceCode: https://github.com/HY-ZhengWei/hy.common.zxing
 SourceCodeChina: https://gitee.com/HY-ZhengWei/hy.common.zxing
 SourceCodePlus: https://github.com/zxing/zxing
-Build-JDK: 1.8
+Build-JDK: OpenJDK 1.8
