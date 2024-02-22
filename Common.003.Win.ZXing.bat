@@ -27,3 +27,5 @@ copy hy.common.zxing-sources.jar ..\..\..
 del /Q hy.common.zxing-sources.jar
 rd /s/q META-INF
 cd ..\..\..
+
+pause
