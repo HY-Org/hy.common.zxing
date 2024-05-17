@@ -6,7 +6,7 @@
 
     <groupId>cn.openapis</groupId>
     <artifactId>hy.common.zxing</artifactId>
-    <version>3.4.3</version>
+    <version>3.4.4</version>
     <packaging>jar</packaging>
 
     <name>cn.openapis.hy.common.zxing</name>
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>cn.openapis</groupId>
             <artifactId>hy.common.base</artifactId>
-            <version>1.0.183</version>
+            <version>1.0.184</version>
             <scope>provided</scope>
         </dependency>
 

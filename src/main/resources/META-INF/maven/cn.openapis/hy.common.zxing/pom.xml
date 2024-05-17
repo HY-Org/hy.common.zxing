@@ -6,33 +6,19 @@
 
     <groupId>org</groupId>
     <artifactId>hy.common.zxing</artifactId>
-    <version>3.4.3</version>
+    <version>3.4.4</version>
     <packaging>jar</packaging>
 
-    <name>cn.openapis.hy.common.zxing</name>
+    <name>org.hy.common.zxing</name>
     <!-- https://gitee.com/HY-ZhengWei/hy.common.zxing -->
     <url>https://github.com/HY-ZhengWei/hy.common.zxing</url>
-    <description>cn.openapis.hy.common.zxing</description>
+    <description>org.hy.common.zxing</description>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>maven-public</id>
-            <name>oss sonatype snapshots</name>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
-        </snapshotRepository>
-
-        <repository>
-            <id>maven-public</id>
-            <name>oss sonatype releases</name>
-            <url>https://s01.oss.sonatype.org/content/repositories/releases/</url>
-        </repository>
-    </distributionManagement>
 
     <licenses>
         <license>
@@ -52,9 +38,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>cn.openapis</groupId>
+            <groupId>org</groupId>
             <artifactId>hy.common.base</artifactId>
-            <version>1.0.183</version>
+            <version>1.0.184</version>
             <scope>provided</scope>
         </dependency>
 
@@ -71,13 +57,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-    <scm>
-        <tag>master</tag>
-        <url>git@github.com:HY-ZhengWei/hy.common.zxing.git</url>
-        <connection>git@github.com:HY-ZhengWei/hy.common.zxing.git</connection>
-        <developerConnection>git@github.com:HY-ZhengWei/hy.common.zxing.git</developerConnection>
-    </scm>
 
     <build>
         <resources>
