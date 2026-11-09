@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -12,7 +12,7 @@
     <name>org.hy.common.zxing</name>
     <!-- https://gitee.com/HY-ZhengWei/hy.common.zxing -->
     <url>https://github.com/HY-ZhengWei/hy.common.zxing</url>
-    <description>org.hy.common.zxing</description>
+    <description>二维码条形码通用组件（Universal component for QR codes and barcodes）</description>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -40,7 +40,7 @@
         <dependency>
             <groupId>org</groupId>
             <artifactId>hy.common.base</artifactId>
-            <version>1.0.186</version>
+            <version>1.0.217</version>
             <scope>provided</scope>
         </dependency>
 
